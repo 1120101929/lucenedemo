@@ -37,7 +37,7 @@ public class Indexer implements Closeable {
 
                 Document document = new Document();
                 //文件名
-                document.add(new StringField("filename", path.getFileName().toString(), Field.Store.NO));
+                document.add(new StringField("filename", path.getFileName().toString(), Field.Store.YES));
                 try {
                     //文件大小
                     document.add(new LongPoint("size", Files.size(path)));
@@ -53,9 +53,9 @@ public class Indexer implements Closeable {
 
                 String type = getFileType(path);
                 //文件类型
-                document.add(new StringField("type", type, Field.Store.NO));
+                document.add(new StringField("type", type, Field.Store.YES));
 
-                if (isJavaFile(type)) {
+                if (isJavaFile(type) || isTextFile(type)) {
                     try {
                         //文件内容
                         document.add(new TextField("content", Files.newBufferedReader(path)));
@@ -75,6 +75,10 @@ public class Indexer implements Closeable {
         this.writer.commit();
 
         System.out.println("done.");
+    }
+
+    private boolean isTextFile(String type) {
+        return "txt".equalsIgnoreCase(type);
     }
 
     /**
@@ -102,7 +106,8 @@ public class Indexer implements Closeable {
         return filename.substring(index + 1);
     }
 
+    @Override
     public void close() {
-        IOUtils.closeQuietly(this.directory, this.writer);
+        IOUtils.closeQuietly(this.writer, this.directory);
     }
 }
