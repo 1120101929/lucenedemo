@@ -2,6 +2,7 @@ package cn.lym.lucene.search;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.lucene.document.Document;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -73,6 +74,7 @@ public class SearcherTest {
         }
     }
 
+    @AfterClass
     public static void teardown() throws Exception {
         IOUtils.closeQuietly(searcher);
     }

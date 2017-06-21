@@ -1,5 +1,6 @@
 package cn.lym.lucene.search;
 
+import cn.lym.lucene.Fields;
 import org.apache.commons.io.IOUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.LongPoint;
@@ -32,27 +33,27 @@ public class Searcher implements Closeable {
     }
 
     public List<Document> getByFileName(String filename) throws IOException {
-        Query query = new TermQuery(new Term("filename", filename));
+        Query query = new TermQuery(new Term(Fields.FILENAME, filename));
         return doSearch(query);
     }
 
     public List<Document> getBySize(long size) throws IOException {
-        Query query = LongPoint.newExactQuery("size", size);
+        Query query = LongPoint.newExactQuery(Fields.SIZE, size);
         return doSearch(query);
     }
 
     public List<Document> getBySize(long minSize, long maxSize) throws IOException {
-        Query query = LongPoint.newRangeQuery("size", minSize, maxSize);
+        Query query = LongPoint.newRangeQuery(Fields.SIZE, minSize, maxSize);
         return doSearch(query);
     }
 
     public List<Document> getByType(String type) throws IOException {
-        Query query = new TermQuery(new Term("type", type));
+        Query query = new TermQuery(new Term(Fields.TYPE, type));
         return doSearch(query);
     }
 
     public List<Document> getByContent(String keyword) throws Exception {
-        Query query = new TermQuery(new Term("content", keyword));
+        Query query = new TermQuery(new Term(Fields.CONTENT, keyword));
         return doSearch(query);
     }
 

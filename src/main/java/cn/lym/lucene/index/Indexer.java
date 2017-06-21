@@ -1,5 +1,6 @@
 package cn.lym.lucene.index;
 
+import cn.lym.lucene.Fields;
 import org.apache.commons.io.IOUtils;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.IndexWriter;
@@ -37,28 +38,28 @@ public class Indexer implements Closeable {
 
                 Document document = new Document();
                 //文件名
-                document.add(new StringField("filename", path.getFileName().toString(), Field.Store.YES));
+                document.add(new StringField(Fields.FILENAME, path.getFileName().toString(), Field.Store.YES));
                 try {
                     //文件大小
-                    document.add(new LongPoint("size", Files.size(path)));
+                    document.add(new LongPoint(Fields.SIZE, Files.size(path)));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 try {
                     //修改时间
-                    document.add(new LongPoint("modified", Files.getLastModifiedTime(path).toMillis()));
+                    document.add(new LongPoint(Fields.MODIFIED, Files.getLastModifiedTime(path).toMillis()));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
                 String type = getFileType(path);
                 //文件类型
-                document.add(new StringField("type", type, Field.Store.YES));
+                document.add(new StringField(Fields.TYPE, type, Field.Store.YES));
 
                 if (isJavaFile(type) || isTextFile(type)) {
                     try {
                         //文件内容
-                        document.add(new TextField("content", Files.newBufferedReader(path)));
+                        document.add(new TextField(Fields.CONTENT, Files.newBufferedReader(path)));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
